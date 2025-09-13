@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Staff Allocation + Labor Cost</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -174,7 +175,10 @@
 <fieldset>
 <legend>Client Information</legend>
 <label>Date (MM-DD-YYYY):<span style="color: red;">*</span></label>
-<input type="text" name="submitted_date" placeholder="MM-DD-YYYY" pattern="^(0[1-9]|1[0-2])-([0-2][0-9]|3[01])-\d{4}$" required />
+<input type="text" id="submitted_date" name="submitted_date" placeholder="MM-DD-YYYY" required />
+
+<label>Start Time:<span style="color: red;">*</span></label>
+<input type="text" id="start_time" name="start_time" placeholder="HH:MM" required />
 
 <label>Lunch Time (hrs):</label>
 <input type="number" name="lunch_time" min="0" step="0.5"/>
@@ -194,9 +198,10 @@
 </form>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
   // ===== Password Protection =====
-  const PASSWORD = "BCOps1!"; // <-- set your password here
+  const PASSWORD = "12345"; // <-- set your password here
 
   function checkPassword() {
     const input = document.getElementById("passwordInput").value;
@@ -207,6 +212,18 @@
       document.getElementById("errorMsg").style.display = "block";
     }
   }
+
+  // ===== Initialize Flatpickr =====
+  flatpickr("#submitted_date", {
+    dateFormat: "m-d-Y" // MM-DD-YYYY
+  });
+
+  flatpickr("#start_time", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "h:i K", // 12-hour format with AM/PM
+    time_24hr: false
+  });
 
   // ===== Add/Remove Employees =====
   function addEmployeeProject() {
@@ -261,6 +278,7 @@
 
     const payload = {
       submitted_date: formData.get("submitted_date"),
+      start_time: formData.get("start_time"),
       lunch_time: formData.get("lunch_time"),
       notes: formData.get("notes"),
       active: formData.get("active"),
